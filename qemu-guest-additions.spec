@@ -6,9 +6,10 @@
 #
 Name     : qemu-guest-additions
 Version  : 3.1.0
-Release  : 102
+Release  : 103
 URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
+Source1  : qemu-guest-agent.service
 Source99 : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz.sig
 Summary  : A lightweight multi-platform, multi-architecture disassembly framework
 Group    : Development/Tools
@@ -17,6 +18,7 @@ Requires: qemu-guest-additions-bin = %{version}-%{release}
 Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-libexec = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
+Requires: qemu-guest-additions-services = %{version}-%{release}
 BuildRequires : attr-dev
 BuildRequires : automake-dev
 BuildRequires : bison
@@ -64,6 +66,7 @@ Group: Binaries
 Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-libexec = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
+Requires: qemu-guest-additions-services = %{version}-%{release}
 
 %description bin
 bin components for the qemu-guest-additions package.
@@ -94,6 +97,14 @@ Group: Default
 license components for the qemu-guest-additions package.
 
 
+%package services
+Summary: services components for the qemu-guest-additions package.
+Group: Systemd services
+
+%description services
+services components for the qemu-guest-additions package.
+
+
 %prep
 %setup -q -n qemu-3.1.0
 %patch1 -p1
@@ -111,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1552833081
+export SOURCE_DATE_EPOCH=1552833839
 export LDFLAGS="${LDFLAGS} -fno-lto"
 export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -144,7 +155,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1552833081
+export SOURCE_DATE_EPOCH=1552833839
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/COPYING
@@ -190,6 +201,8 @@ cp tests/qemu-iotests/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest
 cp ui/keycodemapdb/LICENSE.BSD %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.BSD
 cp ui/keycodemapdb/LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.GPL2
 %make_install
+mkdir -p %{buildroot}/usr/lib/systemd/system
+install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/qemu-guest-agent.service
 ## install_append content
 rm -rf %{buildroot}/usr/share/locale
 ## install_append end
@@ -354,3 +367,7 @@ rm -rf %{buildroot}/usr/share/locale
 /usr/share/package-licenses/qemu-guest-additions/tests_qemu-iotests_COPYING
 /usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.BSD
 /usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.GPL2
+
+%files services
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/qemu-guest-agent.service
