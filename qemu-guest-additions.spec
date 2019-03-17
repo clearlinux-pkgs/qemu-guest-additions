@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 3.1.0
-Release  : 103
+Release  : 104
 URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -14,6 +14,7 @@ Source99 : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz.sig
 Summary  : A lightweight multi-platform, multi-architecture disassembly framework
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT NCSA
+Requires: qemu-guest-additions-autostart = %{version}-%{release}
 Requires: qemu-guest-additions-bin = %{version}-%{release}
 Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-libexec = %{version}-%{release}
@@ -59,6 +60,14 @@ Patch10: CVE-2019-3812.patch
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
 disasm engine for binary analysis and reversing in the security community.
+
+%package autostart
+Summary: autostart components for the qemu-guest-additions package.
+Group: Default
+
+%description autostart
+autostart components for the qemu-guest-additions package.
+
 
 %package bin
 Summary: bin components for the qemu-guest-additions package.
@@ -122,7 +131,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1552833839
+export SOURCE_DATE_EPOCH=1552834808
 export LDFLAGS="${LDFLAGS} -fno-lto"
 export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -155,7 +164,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1552833839
+export SOURCE_DATE_EPOCH=1552834808
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/COPYING
@@ -205,10 +214,16 @@ mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/qemu-guest-agent.service
 ## install_append content
 rm -rf %{buildroot}/usr/share/locale
+mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
+ln -s ../qemu-guest-agent.service  %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service
 ## install_append end
 
 %files
 %defattr(-,root,root,-)
+
+%files autostart
+%defattr(-,root,root,-)
+/usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service
 
 %files bin
 %defattr(-,root,root,-)
@@ -370,4 +385,5 @@ rm -rf %{buildroot}/usr/share/locale
 
 %files services
 %defattr(-,root,root,-)
+%exclude /usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service
 /usr/lib/systemd/system/qemu-guest-agent.service
