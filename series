@@ -1,0 +1,10 @@
+configure.patch
+cores-default.patch
+0001-Use-run-lock.patch
+CVE-2018-16872.patch
+CVE-2018-20191.patch
+CVE-2018-20124.patch
+CVE-2018-20123.patch
+CVE-2019-6778.patch
+CVE-2017-18043.nopatch
+CVE-2019-3812.patch

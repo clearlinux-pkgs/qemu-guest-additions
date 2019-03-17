@@ -1,0 +1,18 @@
+--disable-sdl
+--enable-vnc
+--enable-gtk
+--enable-kvm
+--disable-strip
+--target-list='i386-softmmu x86_64-softmmu i386-linux-user x86_64-linux-user'
+--enable-spice
+--enable-rbd
+--extra-cflags="-O3"
+--enable-attr
+--enable-cap-ng
+--enable-virtfs
+--enable-vhost-net
+--enable-usb-redir
+--python=/usr/bin/python
+--enable-seccomp
+--enable-linux-aio
+#--enable-curses

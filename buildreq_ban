@@ -1,0 +1,13 @@
+#
+# This file contains banned pkgconfig build requirements that get picked up but are 
+# undesireable desirable. One name per line, no whitespace.
+#
+
+#qboot minimal build
+ncurses-dev
+gnutls-dev
+nettle-dev
+lzo-dev
+curl-dev
+pkgconfig(pixman-1)
+python-dev

@@ -1,0 +1,30 @@
+#
+# This file contains extra pkgconfig build requirements that don't get picked up but are 
+# desirable. One name per line, no whitespace.
+#
+attr-dev
+automake-dev
+bison
+ceph-dev
+flex
+glib-dev
+gtk3-dev
+libaio-dev
+libcap-dev
+libcap-ng-dev
+libcap-ng-dev
+libjpeg-turbo-dev
+libseccomp-dev
+libtool
+libtool-dev
+lzo-dev
+m4
+numactl-dev
+python-dev
+snappy-dev
+spice
+spice-dev
+spice-protocol
+usbredir-dev
+util-linux-dev
+zlib-dev
