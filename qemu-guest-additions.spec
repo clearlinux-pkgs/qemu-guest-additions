@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 3.1.0
-Release  : 104
+Release  : 105
 URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source1  : qemu-guest-agent.service
