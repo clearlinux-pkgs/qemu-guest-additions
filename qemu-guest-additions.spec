@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 3.1.0
-Release  : 107
+Release  : 108
 URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -56,6 +56,8 @@ Patch7: CVE-2018-20123.patch
 Patch8: CVE-2019-6778.patch
 Patch9: CVE-2017-18043.nopatch
 Patch10: CVE-2019-3812.patch
+Patch11: CVE-2018-20815.patch
+Patch12: CVE-2019-9824.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -125,18 +127,20 @@ services components for the qemu-guest-additions package.
 %patch7 -p1
 %patch8 -p1
 %patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1553719297
-export LDFLAGS="${LDFLAGS} -fno-lto"
-export CFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FCFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FFLAGS="$CFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
-export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs=used "
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1563404388
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export CXXFLAGS="$CXXFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 %configure --disable-static --disable-sdl \
 --enable-vnc \
 --enable-gtk \
@@ -157,14 +161,14 @@ export CXXFLAGS="$CXXFLAGS -fstack-protector-strong -mzero-caller-saved-regs=use
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1553719297
+export SOURCE_DATE_EPOCH=1563404388
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/COPYING
