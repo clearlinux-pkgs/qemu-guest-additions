@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 3.1.0
-Release  : 108
+Release  : 109
 URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -58,6 +58,8 @@ Patch9: CVE-2017-18043.nopatch
 Patch10: CVE-2019-3812.patch
 Patch11: CVE-2018-20815.patch
 Patch12: CVE-2019-9824.patch
+Patch13: 0001-linux-user-assume-__NR_gettid-always-exists.patch
+Patch14: 0002-linux-user-rename-gettid-to-sys_gettid-to-avoid-clas.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -129,6 +131,8 @@ services components for the qemu-guest-additions package.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
+%patch14 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
