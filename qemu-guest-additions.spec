@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 4.2.0
-Release  : 110
+Release  : 111
 URL      : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -16,7 +16,6 @@ Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-2-Clause-Patent BSD-3-Clause BSD-4-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT NCSA OpenSSL
 Requires: qemu-guest-additions-autostart = %{version}-%{release}
 Requires: qemu-guest-additions-bin = %{version}-%{release}
-Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
 Requires: Sphinx
@@ -73,20 +72,11 @@ autostart components for the qemu-guest-additions package.
 %package bin
 Summary: bin components for the qemu-guest-additions package.
 Group: Binaries
-Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
 
 %description bin
 bin components for the qemu-guest-additions package.
-
-
-%package data
-Summary: data components for the qemu-guest-additions package.
-Group: Data
-
-%description data
-data components for the qemu-guest-additions package.
 
 
 %package license
@@ -117,7 +107,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1579820230
+export SOURCE_DATE_EPOCH=1579822236
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -150,7 +140,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1579820230
+export SOURCE_DATE_EPOCH=1579822236
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-4.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
@@ -315,6 +305,39 @@ rm -f %{buildroot}/usr/bin/qemu-system-x86_64
 rm -f %{buildroot}/usr/bin/qemu-x86_64
 rm -f %{buildroot}/usr/bin/virtfs-proxy-helper
 rm -f %{buildroot}/usr/libexec/qemu-bridge-helper
+rm -f %{buildroot}/usr/share/applications/qemu.desktop
+rm -f %{buildroot}/usr/share/icons/hicolor/128x128/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/16x16/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/24x24/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/256x256/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/32x32/apps/qemu.bmp
+rm -f %{buildroot}/usr/share/icons/hicolor/32x32/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/48x48/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/512x512/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/64x64/apps/qemu.png
+rm -f %{buildroot}/usr/share/icons/hicolor/scalable/apps/qemu.svg
+rm -f %{buildroot}/usr/share/qemu/bios-microvm.bin
+rm -f %{buildroot}/usr/share/qemu/edk2-aarch64-code.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-arm-code.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-arm-vars.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-i386-code.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-i386-secure-code.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-i386-vars.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-licenses.txt
+rm -f %{buildroot}/usr/share/qemu/edk2-x86_64-code.fd
+rm -f %{buildroot}/usr/share/qemu/edk2-x86_64-secure-code.fd
+rm -f %{buildroot}/usr/share/qemu/firmware/50-edk2-i386-secure.json
+rm -f %{buildroot}/usr/share/qemu/firmware/50-edk2-x86_64-secure.json
+rm -f %{buildroot}/usr/share/qemu/firmware/60-edk2-aarch64.json
+rm -f %{buildroot}/usr/share/qemu/firmware/60-edk2-arm.json
+rm -f %{buildroot}/usr/share/qemu/firmware/60-edk2-i386.json
+rm -f %{buildroot}/usr/share/qemu/firmware/60-edk2-x86_64.json
+rm -f %{buildroot}/usr/share/qemu/opensbi-riscv32-virt-fw_jump.bin
+rm -f %{buildroot}/usr/share/qemu/opensbi-riscv64-sifive_u-fw_jump.bin
+rm -f %{buildroot}/usr/share/qemu/opensbi-riscv64-virt-fw_jump.bin
+rm -f %{buildroot}/usr/share/qemu/pvh.bin
+rm -f %{buildroot}/usr/share/qemu/qemu-nsis.bmp
+rm -f %{buildroot}/usr/share/qemu/vgabios-ati.bin
 ## install_append content
 rm -rf %{buildroot}/usr/share/locale
 mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
@@ -331,42 +354,6 @@ ln -s ../qemu-guest-agent.service  %{buildroot}/usr/lib/systemd/system/multi-use
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/qemu-ga
-
-%files data
-%defattr(-,root,root,-)
-/usr/share/applications/qemu.desktop
-/usr/share/icons/hicolor/128x128/apps/qemu.png
-/usr/share/icons/hicolor/16x16/apps/qemu.png
-/usr/share/icons/hicolor/24x24/apps/qemu.png
-/usr/share/icons/hicolor/256x256/apps/qemu.png
-/usr/share/icons/hicolor/32x32/apps/qemu.bmp
-/usr/share/icons/hicolor/32x32/apps/qemu.png
-/usr/share/icons/hicolor/48x48/apps/qemu.png
-/usr/share/icons/hicolor/512x512/apps/qemu.png
-/usr/share/icons/hicolor/64x64/apps/qemu.png
-/usr/share/icons/hicolor/scalable/apps/qemu.svg
-/usr/share/qemu/bios-microvm.bin
-/usr/share/qemu/edk2-aarch64-code.fd
-/usr/share/qemu/edk2-arm-code.fd
-/usr/share/qemu/edk2-arm-vars.fd
-/usr/share/qemu/edk2-i386-code.fd
-/usr/share/qemu/edk2-i386-secure-code.fd
-/usr/share/qemu/edk2-i386-vars.fd
-/usr/share/qemu/edk2-licenses.txt
-/usr/share/qemu/edk2-x86_64-code.fd
-/usr/share/qemu/edk2-x86_64-secure-code.fd
-/usr/share/qemu/firmware/50-edk2-i386-secure.json
-/usr/share/qemu/firmware/50-edk2-x86_64-secure.json
-/usr/share/qemu/firmware/60-edk2-aarch64.json
-/usr/share/qemu/firmware/60-edk2-arm.json
-/usr/share/qemu/firmware/60-edk2-i386.json
-/usr/share/qemu/firmware/60-edk2-x86_64.json
-/usr/share/qemu/opensbi-riscv32-virt-fw_jump.bin
-/usr/share/qemu/opensbi-riscv64-sifive_u-fw_jump.bin
-/usr/share/qemu/opensbi-riscv64-virt-fw_jump.bin
-/usr/share/qemu/pvh.bin
-/usr/share/qemu/qemu-nsis.bmp
-/usr/share/qemu/vgabios-ati.bin
 
 %files license
 %defattr(0644,root,root,0755)
