@@ -1,0 +1,25 @@
+From 39f143bd368d29c83594a60591b2cedc26211ee7 Mon Sep 17 00:00:00 2001
+From: Auke Kok <auke-jan.h.kok@intel.com>
+Date: Thu, 16 Jan 2020 13:02:51 -0800
+Subject: [PATCH 2/3] Set default number of sockets to 1.
+
+---
+ hw/core/machine.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hw/core/machine.c b/hw/core/machine.c
+index 1689ad3b..ff21818d 100644
+--- a/hw/core/machine.c
++++ b/hw/core/machine.c
+@@ -725,7 +725,7 @@ static void smp_parse(MachineState *ms, QemuOpts *opts)
+ {
+     if (opts) {
+         unsigned cpus    = qemu_opt_get_number(opts, "cpus", 0);
+-        unsigned sockets = qemu_opt_get_number(opts, "sockets", 0);
++        unsigned sockets = qemu_opt_get_number(opts, "sockets", 1);
+         unsigned cores   = qemu_opt_get_number(opts, "cores", 0);
+         unsigned threads = qemu_opt_get_number(opts, "threads", 0);
+ 
+-- 
+2.25.0
+

@@ -5,28 +5,36 @@
 # Source0 file verified with key 0x3353C9CEF108B584 (mdroth@utexas.edu)
 #
 Name     : qemu-guest-additions
-Version  : 3.1.0
-Release  : 109
-URL      : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
-Source0  : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz
+Version  : 4.2.0
+Release  : 110
+URL      : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
+Source0  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source1  : qemu-guest-agent.service
-Source99 : http://wiki.qemu-project.org/download/qemu-3.1.0.tar.xz.sig
+Source2  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz.sig
 Summary  : A lightweight multi-platform, multi-architecture disassembly framework
 Group    : Development/Tools
-License  : Apache-2.0 BSD-2-Clause BSD-3-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT NCSA
+License  : Apache-2.0 BSD-2-Clause BSD-2-Clause-Patent BSD-3-Clause BSD-4-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT NCSA OpenSSL
 Requires: qemu-guest-additions-autostart = %{version}-%{release}
 Requires: qemu-guest-additions-bin = %{version}-%{release}
 Requires: qemu-guest-additions-data = %{version}-%{release}
-Requires: qemu-guest-additions-libexec = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
+Requires: Sphinx
+Requires: docutils
+Requires: sphinx_rtd_theme
+BuildRequires : Sphinx
+BuildRequires : apache-ant
 BuildRequires : attr-dev
 BuildRequires : automake-dev
 BuildRequires : bison
 BuildRequires : buildreq-cmake
+BuildRequires : buildreq-cpan
 BuildRequires : buildreq-distutils3
+BuildRequires : buildreq-meson
+BuildRequires : buildreq-mvn
 BuildRequires : buildreq-qmake
 BuildRequires : ceph-dev
+BuildRequires : docutils
 BuildRequires : flex
 BuildRequires : glib-dev
 BuildRequires : gtk3-dev
@@ -46,20 +54,9 @@ BuildRequires : spice-protocol
 BuildRequires : usbredir-dev
 BuildRequires : util-linux-dev
 BuildRequires : zlib-dev
-Patch1: configure.patch
-Patch2: cores-default.patch
-Patch3: 0001-Use-run-lock.patch
-Patch4: CVE-2018-16872.patch
-Patch5: CVE-2018-20191.patch
-Patch6: CVE-2018-20124.patch
-Patch7: CVE-2018-20123.patch
-Patch8: CVE-2019-6778.patch
-Patch9: CVE-2017-18043.nopatch
-Patch10: CVE-2019-3812.patch
-Patch11: CVE-2018-20815.patch
-Patch12: CVE-2019-9824.patch
-Patch13: 0001-linux-user-assume-__NR_gettid-always-exists.patch
-Patch14: 0002-linux-user-rename-gettid-to-sys_gettid-to-avoid-clas.patch
+Patch1: 0001-Allow-unknown-options-in-configure-script.patch
+Patch2: 0002-Set-default-number-of-sockets-to-1.patch
+Patch3: 0003-Use-run-lock.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -77,7 +74,6 @@ autostart components for the qemu-guest-additions package.
 Summary: bin components for the qemu-guest-additions package.
 Group: Binaries
 Requires: qemu-guest-additions-data = %{version}-%{release}
-Requires: qemu-guest-additions-libexec = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
 
@@ -91,15 +87,6 @@ Group: Data
 
 %description data
 data components for the qemu-guest-additions package.
-
-
-%package libexec
-Summary: libexec components for the qemu-guest-additions package.
-Group: Default
-Requires: qemu-guest-additions-license = %{version}-%{release}
-
-%description libexec
-libexec components for the qemu-guest-additions package.
 
 
 %package license
@@ -119,27 +106,18 @@ services components for the qemu-guest-additions package.
 
 
 %prep
-%setup -q -n qemu-3.1.0
+%setup -q -n qemu-4.2.0
+cd %{_builddir}/qemu-4.2.0
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1563404388
+export SOURCE_DATE_EPOCH=1579820230
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -172,54 +150,171 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1563404388
+export SOURCE_DATE_EPOCH=1579820230
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
-cp COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/COPYING
-cp COPYING.LIB %{buildroot}/usr/share/package-licenses/qemu-guest-additions/COPYING.LIB
-cp LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/LICENSE
-cp capstone/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/capstone_LICENSE.TXT
-cp capstone/LICENSE_LLVM.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/capstone_LICENSE_LLVM.TXT
-cp capstone/bindings/python/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/capstone_bindings_python_LICENSE.TXT
-cp disas/libvixl/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/disas_libvixl_LICENCE
-cp dtc/README.license %{buildroot}/usr/share/package-licenses/qemu-guest-additions/dtc_README.license
-cp linux-headers/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/linux-headers_COPYING
-cp roms/QemuMacDrivers/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_QemuMacDrivers_COPYING
-cp roms/SLOF/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_SLOF_LICENSE
-cp roms/ipxe/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_COPYING
-cp roms/ipxe/COPYING.GPLv2 %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_COPYING.GPLv2
-cp roms/ipxe/src/include/ipxe/efi/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_src_include_ipxe_efi_LICENCE
-cp roms/openbios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_openbios_COPYING
-cp roms/openbios/Documentation/kernel/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_openbios_Documentation_kernel_COPYING
-cp roms/openbios/utils/devbios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_openbios_utils_devbios_COPYING
-cp roms/openhackware/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_openhackware_COPYING
-cp roms/qemu-palcode/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_qemu-palcode_COPYING
-cp roms/seabios-hppa/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_seabios-hppa_COPYING
-cp roms/seabios-hppa/COPYING.LESSER %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_seabios-hppa_COPYING.LESSER
-cp roms/seabios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_seabios_COPYING
-cp roms/seabios/COPYING.LESSER %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_seabios_COPYING.LESSER
-cp roms/sgabios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_sgabios_COPYING
-cp roms/skiboot/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_LICENCE
-cp roms/skiboot/ccan/array_size/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_array_size_LICENSE
-cp roms/skiboot/ccan/build_assert/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_build_assert_LICENSE
-cp roms/skiboot/ccan/check_type/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_check_type_LICENSE
-cp roms/skiboot/ccan/container_of/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_container_of_LICENSE
-cp roms/skiboot/ccan/endian/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_endian_LICENSE
-cp roms/skiboot/ccan/list/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_list_LICENSE
-cp roms/skiboot/ccan/short_types/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_short_types_LICENSE
-cp roms/skiboot/ccan/str/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_str_LICENSE
-cp roms/u-boot-sam460ex/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_COPYING
-cp roms/u-boot-sam460ex/board/ACube/bios_emulator/scitech/src/x86emu/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_board_ACube_bios_emulator_scitech_src_x86emu_LICENSE
-cp roms/u-boot-sam460ex/fs/jffs2/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_fs_jffs2_LICENCE
-cp slirp/COPYRIGHT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/slirp_COPYRIGHT
-cp tests/fp/berkeley-softfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/tests_fp_berkeley-softfloat-3_COPYING.txt
-cp tests/fp/berkeley-testfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/tests_fp_berkeley-testfloat-3_COPYING.txt
-cp tests/qemu-iotests/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/tests_qemu-iotests_COPYING
-cp ui/keycodemapdb/LICENSE.BSD %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.BSD
-cp ui/keycodemapdb/LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.GPL2
+cp %{_builddir}/qemu-4.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
+cp %{_builddir}/qemu-4.2.0/COPYING.LIB %{buildroot}/usr/share/package-licenses/qemu-guest-additions/01a6b4bf79aca9b556822601186afab86e8c4fbf
+cp %{_builddir}/qemu-4.2.0/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/c690b05ff6431c277b59784e95169e0e0528a983
+cp %{_builddir}/qemu-4.2.0/capstone/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/861af24907e399e873920dbbff1ea1dd73a9ba35
+cp %{_builddir}/qemu-4.2.0/capstone/LICENSE_LLVM.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/afc034c0ae47cbd47a99c6c5992d846511bb33ad
+cp %{_builddir}/qemu-4.2.0/capstone/bindings/python/LICENSE.TXT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/861af24907e399e873920dbbff1ea1dd73a9ba35
+cp %{_builddir}/qemu-4.2.0/disas/libvixl/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/25383eb1c76eae5993e92a1cf2b75d58e599bbf5
+cp %{_builddir}/qemu-4.2.0/dtc/README.license %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e6060b19e275bde4187546231ba289a486d987e9
+cp %{_builddir}/qemu-4.2.0/linux-headers/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/64ad6386bae45ebd6788e404758a247e26e5c778
+cp %{_builddir}/qemu-4.2.0/roms/QemuMacDrivers/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
+cp %{_builddir}/qemu-4.2.0/roms/SLOF/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e1f0ad62e4850a19b1f56b821f37fccbf84ec191
+cp %{_builddir}/qemu-4.2.0/roms/edk2/ArmPkg/Library/ArmSoftFloatLib/berkeley-softfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/c4cd5ba6f665cf9ecb44e0620c2c76140566cfc6
+cp %{_builddir}/qemu-4.2.0/roms/edk2/BaseTools/Source/C/BrotliCompress/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/4763ba7dfa7730d98b190dd8a4a2c6818d301fcb
+cp %{_builddir}/qemu-4.2.0/roms/edk2/CryptoPkg/Library/OpensslLib/openssl/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/607e96d7bc75d9f884a8e210d276cca4006e0753
+cp %{_builddir}/qemu-4.2.0/roms/edk2/CryptoPkg/Library/OpensslLib/openssl/external/perl/Text-Template-1.46/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ab8577d3eb0eedf3f98004e381a9cee30e7224e1
+cp %{_builddir}/qemu-4.2.0/roms/edk2/License-History.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/1b5c06f43bf6e2039065b681398f6b99a4d552f8
+cp %{_builddir}/qemu-4.2.0/roms/edk2/License.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/7fc5c71d1c403b07043376504d62f2ac73a75313
+cp %{_builddir}/qemu-4.2.0/roms/edk2/MdeModulePkg/Library/BrotliCustomDecompressLib/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/4763ba7dfa7730d98b190dd8a4a2c6818d301fcb
+cp %{_builddir}/qemu-4.2.0/roms/edk2/MdeModulePkg/Universal/RegularExpressionDxe/Oniguruma/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e9d39a1c2bd8459631ec9ec42761fe847ae93f3f
+cp %{_builddir}/qemu-4.2.0/roms/edk2/OvmfPkg/License.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/c9c057d4dc70e7a834d80b762663ca01a852ed13
+cp %{_builddir}/qemu-4.2.0/roms/ipxe/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/cedc99c80ddc135681756e652d55c72d89ebdfe7
+cp %{_builddir}/qemu-4.2.0/roms/ipxe/COPYING.GPLv2 %{buildroot}/usr/share/package-licenses/qemu-guest-additions/4cc77b90af91e615a64ae04893fdffa7939db84c
+cp %{_builddir}/qemu-4.2.0/roms/ipxe/src/include/ipxe/efi/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ca46b2cea92edc93654b11c06c0073ec1a2e50e8
+cp %{_builddir}/qemu-4.2.0/roms/openbios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/8b35225cbdbd6858fb081817cc9dbfe4bef26f5b
+cp %{_builddir}/qemu-4.2.0/roms/openbios/Documentation/kernel/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e9b568889ca9075b505c509f7a877a723cc9a4b0
+cp %{_builddir}/qemu-4.2.0/roms/openbios/utils/devbios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/7475b0da13789cd598fe0703f5337d37dd8b0b95
+cp %{_builddir}/qemu-4.2.0/roms/openhackware/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/17e3b0eea99abffe6ac71e65627413236e0b117a
+cp %{_builddir}/qemu-4.2.0/roms/opensbi/COPYING.BSD %{buildroot}/usr/share/package-licenses/qemu-guest-additions/0a0d7ae8e993794ae9c9ac5219c3d2bbf289471f
+cp %{_builddir}/qemu-4.2.0/roms/qboot/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/30a6e0a424471d8ac874b5616dd5a18c45fd6046
+cp %{_builddir}/qemu-4.2.0/roms/qemu-palcode/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
+cp %{_builddir}/qemu-4.2.0/roms/seabios-hppa/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/qemu-4.2.0/roms/seabios-hppa/COPYING.LESSER %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e7d563f52bf5295e6dba1d67ac23e9f6a160fab9
+cp %{_builddir}/qemu-4.2.0/roms/seabios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/qemu-4.2.0/roms/seabios/COPYING.LESSER %{buildroot}/usr/share/package-licenses/qemu-guest-additions/e7d563f52bf5295e6dba1d67ac23e9f6a160fab9
+cp %{_builddir}/qemu-4.2.0/roms/sgabios/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b8b815229aa8a61e483fb4ba0588b8b6c491890
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b8b815229aa8a61e483fb4ba0588b8b6c491890
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/array_size/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/build_assert/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/check_type/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/container_of/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/endian/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/list/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2807f3f1c4cb33b214defc4c7ab72f7e4e70a305
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/short_types/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/skiboot/ccan/str/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+cp %{_builddir}/qemu-4.2.0/roms/u-boot-sam460ex/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/11bb99995c221415712bb5a6d6c0898f02936feb
+cp %{_builddir}/qemu-4.2.0/roms/u-boot-sam460ex/board/ACube/bios_emulator/scitech/src/x86emu/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/3f226d574cd9547c3e4d934bb1ac4be3601a9782
+cp %{_builddir}/qemu-4.2.0/roms/u-boot-sam460ex/fs/jffs2/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2f02ed32418afe8cc25f30f269c63085bafe44f7
+cp %{_builddir}/qemu-4.2.0/roms/u-boot/cmd/license.c %{buildroot}/usr/share/package-licenses/qemu-guest-additions/33e557c1f30d0d1f1f585cb49686b8c13e47ba83
+cp %{_builddir}/qemu-4.2.0/roms/u-boot/fs/jffs2/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2f02ed32418afe8cc25f30f269c63085bafe44f7
+cp %{_builddir}/qemu-4.2.0/slirp/COPYRIGHT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/051935530e6be28baed83b2aafe66ee5b347d656
+cp %{_builddir}/qemu-4.2.0/tests/fp/berkeley-softfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/c4cd5ba6f665cf9ecb44e0620c2c76140566cfc6
+cp %{_builddir}/qemu-4.2.0/tests/fp/berkeley-testfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/b91b6ebd4f4725457f64e1d35e5a94c2bd35bcec
+cp %{_builddir}/qemu-4.2.0/tests/uefi-test-tools/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/234e74aeab28f7faad2baccf1a3f943b36ab895e
+cp %{_builddir}/qemu-4.2.0/ui/keycodemapdb/LICENSE.BSD %{buildroot}/usr/share/package-licenses/qemu-guest-additions/ea5b412c09f3b29ba1d81a61b878c5c16ffe69d8
+cp %{_builddir}/qemu-4.2.0/ui/keycodemapdb/LICENSE.GPL2 %{buildroot}/usr/share/package-licenses/qemu-guest-additions/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
 %make_install
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/qemu-guest-agent.service
+## Remove excluded files
+rm -f %{buildroot}/usr/bin/qemu-img
+rm -f %{buildroot}/usr/share/qemu/trace-events-all
+rm -f %{buildroot}/usr/share/qemu/u-boot-sam460-20100605.bin
+rm -f %{buildroot}/usr/share/qemu/u-boot.e500
+rm -f %{buildroot}/usr/share/qemu/vgabios-bochs-display.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-cirrus.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-qxl.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-ramfb.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-stdvga.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-virtio.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios-vmware.bin
+rm -f %{buildroot}/usr/share/qemu/vgabios.bin
+rm -f %{buildroot}/usr/share/qemu/QEMU,cgthree.bin
+rm -f %{buildroot}/usr/share/qemu/QEMU,tcx.bin
+rm -f %{buildroot}/usr/share/qemu/bamboo.dtb
+rm -f %{buildroot}/usr/share/qemu/bios-256k.bin
+rm -f %{buildroot}/usr/share/qemu/bios.bin
+rm -f %{buildroot}/usr/share/qemu/canyonlands.dtb
+rm -f %{buildroot}/usr/share/qemu/efi-e1000.rom
+rm -f %{buildroot}/usr/share/qemu/efi-e1000e.rom
+rm -f %{buildroot}/usr/share/qemu/efi-eepro100.rom
+rm -f %{buildroot}/usr/share/qemu/efi-ne2k_pci.rom
+rm -f %{buildroot}/usr/share/qemu/efi-pcnet.rom
+rm -f %{buildroot}/usr/share/qemu/efi-rtl8139.rom
+rm -f %{buildroot}/usr/share/qemu/efi-virtio.rom
+rm -f %{buildroot}/usr/share/qemu/efi-vmxnet3.rom
+rm -f %{buildroot}/usr/share/qemu/hppa-firmware.img
+rm -f %{buildroot}/usr/share/qemu/keymaps/ar
+rm -f %{buildroot}/usr/share/qemu/keymaps/bepo
+rm -f %{buildroot}/usr/share/qemu/keymaps/common
+rm -f %{buildroot}/usr/share/qemu/keymaps/cz
+rm -f %{buildroot}/usr/share/qemu/keymaps/da
+rm -f %{buildroot}/usr/share/qemu/keymaps/de
+rm -f %{buildroot}/usr/share/qemu/keymaps/de-ch
+rm -f %{buildroot}/usr/share/qemu/keymaps/en-gb
+rm -f %{buildroot}/usr/share/qemu/keymaps/en-us
+rm -f %{buildroot}/usr/share/qemu/keymaps/es
+rm -f %{buildroot}/usr/share/qemu/keymaps/et
+rm -f %{buildroot}/usr/share/qemu/keymaps/fi
+rm -f %{buildroot}/usr/share/qemu/keymaps/fo
+rm -f %{buildroot}/usr/share/qemu/keymaps/fr
+rm -f %{buildroot}/usr/share/qemu/keymaps/fr-be
+rm -f %{buildroot}/usr/share/qemu/keymaps/fr-ca
+rm -f %{buildroot}/usr/share/qemu/keymaps/fr-ch
+rm -f %{buildroot}/usr/share/qemu/keymaps/hr
+rm -f %{buildroot}/usr/share/qemu/keymaps/hu
+rm -f %{buildroot}/usr/share/qemu/keymaps/is
+rm -f %{buildroot}/usr/share/qemu/keymaps/it
+rm -f %{buildroot}/usr/share/qemu/keymaps/ja
+rm -f %{buildroot}/usr/share/qemu/keymaps/lt
+rm -f %{buildroot}/usr/share/qemu/keymaps/lv
+rm -f %{buildroot}/usr/share/qemu/keymaps/mk
+rm -f %{buildroot}/usr/share/qemu/keymaps/modifiers
+rm -f %{buildroot}/usr/share/qemu/keymaps/nl
+rm -f %{buildroot}/usr/share/qemu/keymaps/nl-be
+rm -f %{buildroot}/usr/share/qemu/keymaps/no
+rm -f %{buildroot}/usr/share/qemu/keymaps/pl
+rm -f %{buildroot}/usr/share/qemu/keymaps/pt
+rm -f %{buildroot}/usr/share/qemu/keymaps/pt-br
+rm -f %{buildroot}/usr/share/qemu/keymaps/ru
+rm -f %{buildroot}/usr/share/qemu/keymaps/sl
+rm -f %{buildroot}/usr/share/qemu/keymaps/sv
+rm -f %{buildroot}/usr/share/qemu/keymaps/th
+rm -f %{buildroot}/usr/share/qemu/keymaps/tr
+rm -f %{buildroot}/usr/share/qemu/kvmvapic.bin
+rm -f %{buildroot}/usr/share/qemu/linuxboot.bin
+rm -f %{buildroot}/usr/share/qemu/linuxboot_dma.bin
+rm -f %{buildroot}/usr/share/qemu/multiboot.bin
+rm -f %{buildroot}/usr/share/qemu/openbios-ppc
+rm -f %{buildroot}/usr/share/qemu/openbios-sparc32
+rm -f %{buildroot}/usr/share/qemu/openbios-sparc64
+rm -f %{buildroot}/usr/share/qemu/palcode-clipper
+rm -f %{buildroot}/usr/share/qemu/petalogix-ml605.dtb
+rm -f %{buildroot}/usr/share/qemu/petalogix-s3adsp1800.dtb
+rm -f %{buildroot}/usr/share/qemu/ppc_rom.bin
+rm -f %{buildroot}/usr/share/qemu/pxe-e1000.rom
+rm -f %{buildroot}/usr/share/qemu/pxe-eepro100.rom
+rm -f %{buildroot}/usr/share/qemu/pxe-ne2k_pci.rom
+rm -f %{buildroot}/usr/share/qemu/pxe-pcnet.rom
+rm -f %{buildroot}/usr/share/qemu/pxe-rtl8139.rom
+rm -f %{buildroot}/usr/share/qemu/pxe-virtio.rom
+rm -f %{buildroot}/usr/share/qemu/qemu-icon.bmp
+rm -f %{buildroot}/usr/share/qemu/qemu_logo_no_text.svg
+rm -f %{buildroot}/usr/share/qemu/qemu_vga.ndrv
+rm -f %{buildroot}/usr/share/qemu/s390-ccw.img
+rm -f %{buildroot}/usr/share/qemu/s390-netboot.img
+rm -f %{buildroot}/usr/share/qemu/sgabios.bin
+rm -f %{buildroot}/usr/share/qemu/skiboot.lid
+rm -f %{buildroot}/usr/share/qemu/slof.bin
+rm -f %{buildroot}/usr/share/qemu/spapr-rtas.bin
+rm -f %{buildroot}/usr/bin/ivshmem-client
+rm -f %{buildroot}/usr/bin/ivshmem-server
+rm -f %{buildroot}/usr/bin/qemu-edid
+rm -f %{buildroot}/usr/bin/qemu-i386
+rm -f %{buildroot}/usr/bin/qemu-io
+rm -f %{buildroot}/usr/bin/qemu-keymap
+rm -f %{buildroot}/usr/bin/qemu-nbd
+rm -f %{buildroot}/usr/bin/qemu-pr-helper
+rm -f %{buildroot}/usr/bin/qemu-system-i386
+rm -f %{buildroot}/usr/bin/qemu-system-x86_64
+rm -f %{buildroot}/usr/bin/qemu-x86_64
+rm -f %{buildroot}/usr/bin/virtfs-proxy-helper
+rm -f %{buildroot}/usr/libexec/qemu-bridge-helper
 ## install_append content
 rm -rf %{buildroot}/usr/share/locale
 mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
@@ -235,161 +330,86 @@ ln -s ../qemu-guest-agent.service  %{buildroot}/usr/lib/systemd/system/multi-use
 
 %files bin
 %defattr(-,root,root,-)
-%exclude /usr/bin/ivshmem-client
-%exclude /usr/bin/ivshmem-server
-%exclude /usr/bin/qemu-edid
-%exclude /usr/bin/qemu-i386
-%exclude /usr/bin/qemu-img
-%exclude /usr/bin/qemu-io
-%exclude /usr/bin/qemu-keymap
-%exclude /usr/bin/qemu-nbd
-%exclude /usr/bin/qemu-pr-helper
-%exclude /usr/bin/qemu-system-i386
-%exclude /usr/bin/qemu-system-x86_64
-%exclude /usr/bin/qemu-x86_64
-%exclude /usr/bin/virtfs-proxy-helper
 /usr/bin/qemu-ga
 
 %files data
 %defattr(-,root,root,-)
-%exclude /usr/share/qemu/QEMU,cgthree.bin
-%exclude /usr/share/qemu/QEMU,tcx.bin
-%exclude /usr/share/qemu/bamboo.dtb
-%exclude /usr/share/qemu/bios-256k.bin
-%exclude /usr/share/qemu/bios.bin
-%exclude /usr/share/qemu/canyonlands.dtb
-%exclude /usr/share/qemu/efi-e1000.rom
-%exclude /usr/share/qemu/efi-e1000e.rom
-%exclude /usr/share/qemu/efi-eepro100.rom
-%exclude /usr/share/qemu/efi-ne2k_pci.rom
-%exclude /usr/share/qemu/efi-pcnet.rom
-%exclude /usr/share/qemu/efi-rtl8139.rom
-%exclude /usr/share/qemu/efi-virtio.rom
-%exclude /usr/share/qemu/efi-vmxnet3.rom
-%exclude /usr/share/qemu/hppa-firmware.img
-%exclude /usr/share/qemu/keymaps/ar
-%exclude /usr/share/qemu/keymaps/bepo
-%exclude /usr/share/qemu/keymaps/common
-%exclude /usr/share/qemu/keymaps/cz
-%exclude /usr/share/qemu/keymaps/da
-%exclude /usr/share/qemu/keymaps/de
-%exclude /usr/share/qemu/keymaps/de-ch
-%exclude /usr/share/qemu/keymaps/en-gb
-%exclude /usr/share/qemu/keymaps/en-us
-%exclude /usr/share/qemu/keymaps/es
-%exclude /usr/share/qemu/keymaps/et
-%exclude /usr/share/qemu/keymaps/fi
-%exclude /usr/share/qemu/keymaps/fo
-%exclude /usr/share/qemu/keymaps/fr
-%exclude /usr/share/qemu/keymaps/fr-be
-%exclude /usr/share/qemu/keymaps/fr-ca
-%exclude /usr/share/qemu/keymaps/fr-ch
-%exclude /usr/share/qemu/keymaps/hr
-%exclude /usr/share/qemu/keymaps/hu
-%exclude /usr/share/qemu/keymaps/is
-%exclude /usr/share/qemu/keymaps/it
-%exclude /usr/share/qemu/keymaps/ja
-%exclude /usr/share/qemu/keymaps/lt
-%exclude /usr/share/qemu/keymaps/lv
-%exclude /usr/share/qemu/keymaps/mk
-%exclude /usr/share/qemu/keymaps/modifiers
-%exclude /usr/share/qemu/keymaps/nl
-%exclude /usr/share/qemu/keymaps/nl-be
-%exclude /usr/share/qemu/keymaps/no
-%exclude /usr/share/qemu/keymaps/pl
-%exclude /usr/share/qemu/keymaps/pt
-%exclude /usr/share/qemu/keymaps/pt-br
-%exclude /usr/share/qemu/keymaps/ru
-%exclude /usr/share/qemu/keymaps/sl
-%exclude /usr/share/qemu/keymaps/sv
-%exclude /usr/share/qemu/keymaps/th
-%exclude /usr/share/qemu/keymaps/tr
-%exclude /usr/share/qemu/kvmvapic.bin
-%exclude /usr/share/qemu/linuxboot.bin
-%exclude /usr/share/qemu/linuxboot_dma.bin
-%exclude /usr/share/qemu/multiboot.bin
-%exclude /usr/share/qemu/openbios-ppc
-%exclude /usr/share/qemu/openbios-sparc32
-%exclude /usr/share/qemu/openbios-sparc64
-%exclude /usr/share/qemu/palcode-clipper
-%exclude /usr/share/qemu/petalogix-ml605.dtb
-%exclude /usr/share/qemu/petalogix-s3adsp1800.dtb
-%exclude /usr/share/qemu/ppc_rom.bin
-%exclude /usr/share/qemu/pxe-e1000.rom
-%exclude /usr/share/qemu/pxe-eepro100.rom
-%exclude /usr/share/qemu/pxe-ne2k_pci.rom
-%exclude /usr/share/qemu/pxe-pcnet.rom
-%exclude /usr/share/qemu/pxe-rtl8139.rom
-%exclude /usr/share/qemu/pxe-virtio.rom
-%exclude /usr/share/qemu/qemu-icon.bmp
-%exclude /usr/share/qemu/qemu_logo_no_text.svg
-%exclude /usr/share/qemu/qemu_vga.ndrv
-%exclude /usr/share/qemu/s390-ccw.img
-%exclude /usr/share/qemu/s390-netboot.img
-%exclude /usr/share/qemu/sgabios.bin
-%exclude /usr/share/qemu/skiboot.lid
-%exclude /usr/share/qemu/slof.bin
-%exclude /usr/share/qemu/spapr-rtas.bin
-%exclude /usr/share/qemu/trace-events-all
-%exclude /usr/share/qemu/u-boot-sam460-20100605.bin
-%exclude /usr/share/qemu/u-boot.e500
-%exclude /usr/share/qemu/vgabios-bochs-display.bin
-%exclude /usr/share/qemu/vgabios-cirrus.bin
-%exclude /usr/share/qemu/vgabios-qxl.bin
-%exclude /usr/share/qemu/vgabios-ramfb.bin
-%exclude /usr/share/qemu/vgabios-stdvga.bin
-%exclude /usr/share/qemu/vgabios-virtio.bin
-%exclude /usr/share/qemu/vgabios-vmware.bin
-%exclude /usr/share/qemu/vgabios.bin
-
-%files libexec
-%defattr(-,root,root,-)
-%exclude /usr/libexec/qemu-bridge-helper
+/usr/share/applications/qemu.desktop
+/usr/share/icons/hicolor/128x128/apps/qemu.png
+/usr/share/icons/hicolor/16x16/apps/qemu.png
+/usr/share/icons/hicolor/24x24/apps/qemu.png
+/usr/share/icons/hicolor/256x256/apps/qemu.png
+/usr/share/icons/hicolor/32x32/apps/qemu.bmp
+/usr/share/icons/hicolor/32x32/apps/qemu.png
+/usr/share/icons/hicolor/48x48/apps/qemu.png
+/usr/share/icons/hicolor/512x512/apps/qemu.png
+/usr/share/icons/hicolor/64x64/apps/qemu.png
+/usr/share/icons/hicolor/scalable/apps/qemu.svg
+/usr/share/qemu/bios-microvm.bin
+/usr/share/qemu/edk2-aarch64-code.fd
+/usr/share/qemu/edk2-arm-code.fd
+/usr/share/qemu/edk2-arm-vars.fd
+/usr/share/qemu/edk2-i386-code.fd
+/usr/share/qemu/edk2-i386-secure-code.fd
+/usr/share/qemu/edk2-i386-vars.fd
+/usr/share/qemu/edk2-licenses.txt
+/usr/share/qemu/edk2-x86_64-code.fd
+/usr/share/qemu/edk2-x86_64-secure-code.fd
+/usr/share/qemu/firmware/50-edk2-i386-secure.json
+/usr/share/qemu/firmware/50-edk2-x86_64-secure.json
+/usr/share/qemu/firmware/60-edk2-aarch64.json
+/usr/share/qemu/firmware/60-edk2-arm.json
+/usr/share/qemu/firmware/60-edk2-i386.json
+/usr/share/qemu/firmware/60-edk2-x86_64.json
+/usr/share/qemu/opensbi-riscv32-virt-fw_jump.bin
+/usr/share/qemu/opensbi-riscv64-sifive_u-fw_jump.bin
+/usr/share/qemu/opensbi-riscv64-virt-fw_jump.bin
+/usr/share/qemu/pvh.bin
+/usr/share/qemu/qemu-nsis.bmp
+/usr/share/qemu/vgabios-ati.bin
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/qemu-guest-additions/COPYING
-/usr/share/package-licenses/qemu-guest-additions/COPYING.LIB
-/usr/share/package-licenses/qemu-guest-additions/LICENSE
-/usr/share/package-licenses/qemu-guest-additions/capstone_LICENSE.TXT
-/usr/share/package-licenses/qemu-guest-additions/capstone_LICENSE_LLVM.TXT
-/usr/share/package-licenses/qemu-guest-additions/capstone_bindings_python_LICENSE.TXT
-/usr/share/package-licenses/qemu-guest-additions/disas_libvixl_LICENCE
-/usr/share/package-licenses/qemu-guest-additions/dtc_README.license
-/usr/share/package-licenses/qemu-guest-additions/linux-headers_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_QemuMacDrivers_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_SLOF_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_COPYING.GPLv2
-/usr/share/package-licenses/qemu-guest-additions/roms_ipxe_src_include_ipxe_efi_LICENCE
-/usr/share/package-licenses/qemu-guest-additions/roms_openbios_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_openbios_Documentation_kernel_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_openbios_utils_devbios_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_openhackware_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_qemu-palcode_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_seabios-hppa_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_seabios-hppa_COPYING.LESSER
-/usr/share/package-licenses/qemu-guest-additions/roms_seabios_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_seabios_COPYING.LESSER
-/usr/share/package-licenses/qemu-guest-additions/roms_sgabios_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_LICENCE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_array_size_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_build_assert_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_check_type_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_container_of_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_endian_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_list_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_short_types_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_skiboot_ccan_str_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_COPYING
-/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_board_ACube_bios_emulator_scitech_src_x86emu_LICENSE
-/usr/share/package-licenses/qemu-guest-additions/roms_u-boot-sam460ex_fs_jffs2_LICENCE
-/usr/share/package-licenses/qemu-guest-additions/slirp_COPYRIGHT
-/usr/share/package-licenses/qemu-guest-additions/tests_fp_berkeley-softfloat-3_COPYING.txt
-/usr/share/package-licenses/qemu-guest-additions/tests_fp_berkeley-testfloat-3_COPYING.txt
-/usr/share/package-licenses/qemu-guest-additions/tests_qemu-iotests_COPYING
-/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.BSD
-/usr/share/package-licenses/qemu-guest-additions/ui_keycodemapdb_LICENSE.GPL2
+/usr/share/package-licenses/qemu-guest-additions/01a6b4bf79aca9b556822601186afab86e8c4fbf
+/usr/share/package-licenses/qemu-guest-additions/051935530e6be28baed83b2aafe66ee5b347d656
+/usr/share/package-licenses/qemu-guest-additions/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
+/usr/share/package-licenses/qemu-guest-additions/0a0d7ae8e993794ae9c9ac5219c3d2bbf289471f
+/usr/share/package-licenses/qemu-guest-additions/11bb99995c221415712bb5a6d6c0898f02936feb
+/usr/share/package-licenses/qemu-guest-additions/17e3b0eea99abffe6ac71e65627413236e0b117a
+/usr/share/package-licenses/qemu-guest-additions/1b5c06f43bf6e2039065b681398f6b99a4d552f8
+/usr/share/package-licenses/qemu-guest-additions/234e74aeab28f7faad2baccf1a3f943b36ab895e
+/usr/share/package-licenses/qemu-guest-additions/25383eb1c76eae5993e92a1cf2b75d58e599bbf5
+/usr/share/package-licenses/qemu-guest-additions/2807f3f1c4cb33b214defc4c7ab72f7e4e70a305
+/usr/share/package-licenses/qemu-guest-additions/2b8b815229aa8a61e483fb4ba0588b8b6c491890
+/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
+/usr/share/package-licenses/qemu-guest-additions/2f02ed32418afe8cc25f30f269c63085bafe44f7
+/usr/share/package-licenses/qemu-guest-additions/30a6e0a424471d8ac874b5616dd5a18c45fd6046
+/usr/share/package-licenses/qemu-guest-additions/33e557c1f30d0d1f1f585cb49686b8c13e47ba83
+/usr/share/package-licenses/qemu-guest-additions/3e8117303a7ac9ce341dc761b8a4f5ac3696e0a3
+/usr/share/package-licenses/qemu-guest-additions/3f226d574cd9547c3e4d934bb1ac4be3601a9782
+/usr/share/package-licenses/qemu-guest-additions/4763ba7dfa7730d98b190dd8a4a2c6818d301fcb
+/usr/share/package-licenses/qemu-guest-additions/4cc77b90af91e615a64ae04893fdffa7939db84c
+/usr/share/package-licenses/qemu-guest-additions/607e96d7bc75d9f884a8e210d276cca4006e0753
+/usr/share/package-licenses/qemu-guest-additions/64ad6386bae45ebd6788e404758a247e26e5c778
+/usr/share/package-licenses/qemu-guest-additions/7475b0da13789cd598fe0703f5337d37dd8b0b95
+/usr/share/package-licenses/qemu-guest-additions/7fc5c71d1c403b07043376504d62f2ac73a75313
+/usr/share/package-licenses/qemu-guest-additions/861af24907e399e873920dbbff1ea1dd73a9ba35
+/usr/share/package-licenses/qemu-guest-additions/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+/usr/share/package-licenses/qemu-guest-additions/8b35225cbdbd6858fb081817cc9dbfe4bef26f5b
+/usr/share/package-licenses/qemu-guest-additions/ab8577d3eb0eedf3f98004e381a9cee30e7224e1
+/usr/share/package-licenses/qemu-guest-additions/afc034c0ae47cbd47a99c6c5992d846511bb33ad
+/usr/share/package-licenses/qemu-guest-additions/b91b6ebd4f4725457f64e1d35e5a94c2bd35bcec
+/usr/share/package-licenses/qemu-guest-additions/c4cd5ba6f665cf9ecb44e0620c2c76140566cfc6
+/usr/share/package-licenses/qemu-guest-additions/c690b05ff6431c277b59784e95169e0e0528a983
+/usr/share/package-licenses/qemu-guest-additions/c9c057d4dc70e7a834d80b762663ca01a852ed13
+/usr/share/package-licenses/qemu-guest-additions/ca46b2cea92edc93654b11c06c0073ec1a2e50e8
+/usr/share/package-licenses/qemu-guest-additions/cedc99c80ddc135681756e652d55c72d89ebdfe7
+/usr/share/package-licenses/qemu-guest-additions/e1f0ad62e4850a19b1f56b821f37fccbf84ec191
+/usr/share/package-licenses/qemu-guest-additions/e6060b19e275bde4187546231ba289a486d987e9
+/usr/share/package-licenses/qemu-guest-additions/e7d563f52bf5295e6dba1d67ac23e9f6a160fab9
+/usr/share/package-licenses/qemu-guest-additions/e9b568889ca9075b505c509f7a877a723cc9a4b0
+/usr/share/package-licenses/qemu-guest-additions/e9d39a1c2bd8459631ec9ec42761fe847ae93f3f
+/usr/share/package-licenses/qemu-guest-additions/ea5b412c09f3b29ba1d81a61b878c5c16ffe69d8
 
 %files services
 %defattr(-,root,root,-)
