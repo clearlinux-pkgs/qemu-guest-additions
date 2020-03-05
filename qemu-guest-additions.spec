@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 4.2.0
-Release  : 114
+Release  : 115
 URL      : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source0  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -107,7 +107,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1582841194
+export SOURCE_DATE_EPOCH=1583386048
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -140,7 +140,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1582841194
+export SOURCE_DATE_EPOCH=1583386048
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-4.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
