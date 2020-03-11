@@ -6,11 +6,11 @@
 #
 Name     : qemu-guest-additions
 Version  : 4.2.0
-Release  : 115
-URL      : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
-Source0  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
+Release  : 116
+URL      : https://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
+Source0  : https://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source1  : qemu-guest-agent.service
-Source2  : http://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz.sig
+Source2  : https://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz.sig
 Summary  : A lightweight multi-platform, multi-architecture disassembly framework
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-2-Clause-Patent BSD-3-Clause BSD-4-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT NCSA OpenSSL
@@ -53,6 +53,7 @@ Patch3: 0003-Use-run-lock.patch
 Patch4: 0001-util-add-slirp_fmt-helpers.patch
 Patch5: CVE-2020-7039.patch
 Patch6: CVE-2020-8608.patch
+Patch7: CVE-2020-1711.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -101,13 +102,14 @@ cd %{_builddir}/qemu-4.2.0
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1583386048
+export SOURCE_DATE_EPOCH=1583961920
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -140,7 +142,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1583386048
+export SOURCE_DATE_EPOCH=1583961920
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-4.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
