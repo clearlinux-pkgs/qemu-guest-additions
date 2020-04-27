@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 4.2.0
-Release  : 116
+Release  : 117
 URL      : https://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source0  : https://wiki.qemu-project.org/download/qemu-4.2.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -54,6 +54,7 @@ Patch4: 0001-util-add-slirp_fmt-helpers.patch
 Patch5: CVE-2020-7039.patch
 Patch6: CVE-2020-8608.patch
 Patch7: CVE-2020-1711.patch
+Patch8: CVE-2020-1983.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -103,17 +104,18 @@ cd %{_builddir}/qemu-4.2.0
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1583961920
+export SOURCE_DATE_EPOCH=1588027489
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FCFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
-export FFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
+export FFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export CXXFLAGS="$CXXFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 %configure --disable-static --disable-sdl \
 --enable-vnc \
@@ -142,7 +144,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make check || :
 
 %install
-export SOURCE_DATE_EPOCH=1583961920
+export SOURCE_DATE_EPOCH=1588027489
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-4.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
