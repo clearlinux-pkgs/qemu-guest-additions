@@ -1,3 +1,5 @@
-rm -rf %{buildroot}/usr/share/locale
-mkdir -p %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
-ln -s ../qemu-guest-agent.service  %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service
+rm -rvf %{buildroot}/usr/share/icons
+rm -rvf %{buildroot}/usr/share/locale
+rm -rvf %{buildroot}/usr/share/qemu
+mkdir -pv %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
+ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service

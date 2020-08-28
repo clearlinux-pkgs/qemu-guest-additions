@@ -1,8 +1,3 @@
 0001-Allow-unknown-options-in-configure-script.patch
 0002-Set-default-number-of-sockets-to-1.patch
 0003-Use-run-lock.patch
-0001-util-add-slirp_fmt-helpers.patch
-CVE-2020-7039.patch
-CVE-2020-8608.patch
-CVE-2020-1711.patch
-CVE-2020-1983.patch
