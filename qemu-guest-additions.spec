@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 5.1.0
-Release  : 118
+Release  : 119
 URL      : https://download.qemu.org/qemu-5.1.0.tar.xz
 Source0  : https://download.qemu.org/qemu-5.1.0.tar.xz
 Source1  : qemu-guest-agent.service
