@@ -19,3 +19,12 @@
 /usr/libexec/virtfs-proxy-helper
 /usr/libexec/virtiofsd
 /usr/share/applications/qemu.desktop
+/usr/share/man/man1/qemu-img.1
+/usr/share/man/man1/qemu.1
+/usr/share/man/man1/virtfs-proxy-helper.1
+/usr/share/man/man1/virtiofsd.1
+/usr/share/man/man7/qemu-block-drivers.7
+/usr/share/man/man7/qemu-cpu-models.7
+/usr/share/man/man7/qemu-qmp-ref.7
+/usr/share/man/man8/qemu-nbd.8
+/usr/share/man/man8/qemu-pr-helper.8

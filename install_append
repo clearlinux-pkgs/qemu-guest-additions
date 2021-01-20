@@ -1,3 +1,4 @@
+rm -rvf %{buildroot}/usr/share/doc
 rm -rvf %{buildroot}/usr/share/icons
 rm -rvf %{buildroot}/usr/share/locale
 rm -rvf %{buildroot}/usr/share/qemu
