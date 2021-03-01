@@ -1,17 +1,17 @@
-From b2498a9a2d2f406f413e0592e8adc4a45dbc82ce Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Alberto Murillo <alberto.murillo.silva@intel.com>
 Date: Mon, 4 May 2015 17:59:41 -0500
-Subject: [PATCH 3/3] Use /run/lock
+Subject: [PATCH] Use /run/lock
 
 ---
  qemu-nbd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/qemu-nbd.c b/qemu-nbd.c
-index 108a51f7..c1417a31 100644
+index a7075c541..7e290b0b5 100644
 --- a/qemu-nbd.c
 +++ b/qemu-nbd.c
-@@ -51,7 +51,7 @@
+@@ -52,7 +52,7 @@
  #define HAVE_NBD_DEVICE 0
  #endif
  
@@ -20,6 +20,3 @@ index 108a51f7..c1417a31 100644
  #define QEMU_NBD_OPT_CACHE         256
  #define QEMU_NBD_OPT_AIO           257
  #define QEMU_NBD_OPT_DISCARD       258
--- 
-2.25.0
-

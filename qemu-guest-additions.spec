@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 5.2.0
-Release  : 120
+Release  : 121
 URL      : https://download.qemu.org/qemu-5.2.0.tar.xz
 Source0  : https://download.qemu.org/qemu-5.2.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -56,6 +56,7 @@ BuildRequires : zlib-dev
 Patch1: 0001-Allow-unknown-options-in-configure-script.patch
 Patch2: 0002-Set-default-number-of-sockets-to-1.patch
 Patch3: 0003-Use-run-lock.patch
+Patch4: 0004-build-no-pie-is-no-functional-linker-flag.patch
 
 %description
 Capstone is a disassembly framework with the target of becoming the ultimate
@@ -109,13 +110,14 @@ cd %{_builddir}/qemu-5.2.0
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1611170882
+export SOURCE_DATE_EPOCH=1614636628
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
 export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -mzero-caller-saved-regs=used "
@@ -148,7 +150,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1611170882
+export SOURCE_DATE_EPOCH=1614636628
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-5.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
