@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 6.0.0
-Release  : 124
+Release  : 125
 URL      : https://download.qemu.org/qemu-6.0.0.tar.xz
 Source0  : https://download.qemu.org/qemu-6.0.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -122,7 +122,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1624310537
+export SOURCE_DATE_EPOCH=1624317060
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
 export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
@@ -155,7 +155,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1624310537
+export SOURCE_DATE_EPOCH=1624317060
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-6.0.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
@@ -224,6 +224,7 @@ cp %{_builddir}/qemu-6.0.0/ui/keycodemapdb/LICENSE.GPL2 %{buildroot}/usr/share/p
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/qemu-guest-agent.service
 ## Remove excluded files
+rm -f %{buildroot}/usr/bin/elf2dmp
 rm -f %{buildroot}/usr/bin/ivshmem-client
 rm -f %{buildroot}/usr/bin/ivshmem-server
 rm -f %{buildroot}/usr/bin/qemu-edid
@@ -244,6 +245,8 @@ rm -f %{buildroot}/usr/libexec/virtfs-proxy-helper
 rm -f %{buildroot}/usr/libexec/virtiofsd
 rm -f %{buildroot}/usr/share/applications/qemu.desktop
 rm -f %{buildroot}/usr/share/man/man1/qemu-img.1
+rm -f %{buildroot}/usr/share/man/man1/qemu-storage-daemon.1
+rm -f %{buildroot}/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
 rm -f %{buildroot}/usr/share/man/man1/qemu.1
 rm -f %{buildroot}/usr/share/man/man1/virtfs-proxy-helper.1
 rm -f %{buildroot}/usr/share/man/man1/virtiofsd.1
@@ -270,7 +273,6 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 
 %files bin
 %defattr(-,root,root,-)
-/usr/bin/elf2dmp
 /usr/bin/qemu-ga
 
 %files license
@@ -322,9 +324,7 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 
 %files man
 %defattr(0644,root,root,0755)
-/usr/share/man/man1/qemu-storage-daemon.1
 /usr/share/man/man7/qemu-ga-ref.7
-/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
 /usr/share/man/man8/qemu-ga.8
 
 %files services

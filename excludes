@@ -1,5 +1,6 @@
 # This file contains the output files that need %exclude. Full path
 # names, one per line.
+/usr/bin/elf2dmp
 /usr/bin/ivshmem-client
 /usr/bin/ivshmem-server
 /usr/bin/qemu-edid
@@ -20,6 +21,8 @@
 /usr/libexec/virtiofsd
 /usr/share/applications/qemu.desktop
 /usr/share/man/man1/qemu-img.1
+/usr/share/man/man1/qemu-storage-daemon.1
+/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
 /usr/share/man/man1/qemu.1
 /usr/share/man/man1/virtfs-proxy-helper.1
 /usr/share/man/man1/virtiofsd.1
