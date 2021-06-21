@@ -1,2 +1,10 @@
-5.2.0
+6.0.0
+acl-dev
+fuse-dev
+pkgconfig(fuse3)
+pkgconfig(glusterfs-api)
+pkgconfig(libcurl)
+pkgconfig(libiscsi)
+pkgconfig(libnfs)
+pkgconfig(libzstd)
 pkgconfig(ncursesw)

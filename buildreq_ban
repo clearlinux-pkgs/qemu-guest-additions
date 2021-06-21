@@ -6,5 +6,6 @@ gnutls-dev
 nettle-dev
 lzo-dev
 curl-dev
+pkgconfig(libnfs)
 pkgconfig(pixman-1)
 python-dev
