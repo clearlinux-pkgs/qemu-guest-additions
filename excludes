@@ -15,8 +15,10 @@
 /usr/bin/qemu-system-x86_64
 /usr/bin/qemu-x86_64
 /usr/bin/virtfs-proxy-helper
+/usr/include/qemu-plugin.h
 /usr/libexec/qemu-bridge-helper
 /usr/libexec/qemu-pr-helper
+/usr/libexec/vhost-user-gpu
 /usr/libexec/virtfs-proxy-helper
 /usr/libexec/virtiofsd
 /usr/share/applications/qemu.desktop

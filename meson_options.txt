@@ -1,1 +1,1 @@
-option('unit_testing', type: 'boolean', value: false)
+option('name', type : 'string', vaule : 'foo')
