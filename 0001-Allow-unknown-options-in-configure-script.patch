@@ -11,7 +11,7 @@ diff --git a/configure b/configure
 index 18c26e038..37b8bb021 100755
 --- a/configure
 +++ b/configure
-@@ -1528,7 +1528,6 @@ for opt do
+@@ -1584,7 +1584,6 @@ for opt do
    *)
        echo "ERROR: unknown option $opt"
        echo "Try '$0 --help' for more information"

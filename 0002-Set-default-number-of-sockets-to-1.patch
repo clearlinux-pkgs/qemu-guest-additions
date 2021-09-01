@@ -11,12 +11,12 @@ diff --git a/hw/core/machine.c b/hw/core/machine.c
 index d0408049b..1586774c5 100644
 --- a/hw/core/machine.c
 +++ b/hw/core/machine.c
-@@ -700,7 +700,7 @@ static void smp_parse(MachineState *ms, QemuOpts *opts)
+@@ -746,7 +746,7 @@ void machine_set_cpu_numa_node(MachineState *machine,
+ static void smp_parse(MachineState *ms, SMPConfiguration *config, Error **errp)
  {
-     if (opts) {
-         unsigned cpus    = qemu_opt_get_number(opts, "cpus", 0);
--        unsigned sockets = qemu_opt_get_number(opts, "sockets", 0);
-+        unsigned sockets = qemu_opt_get_number(opts, "sockets", 1);
-         unsigned cores   = qemu_opt_get_number(opts, "cores", 0);
-         unsigned threads = qemu_opt_get_number(opts, "threads", 0);
+     unsigned cpus    = config->has_cpus ? config->cpus : 0;
+-    unsigned sockets = config->has_sockets ? config->sockets : 0;
++    unsigned sockets = config->has_sockets ? config->sockets : 1;
+     unsigned cores   = config->has_cores ? config->cores : 0;
+     unsigned threads = config->has_threads ? config->threads : 0;
  
