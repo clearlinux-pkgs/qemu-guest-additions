@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 6.1.0
-Release  : 129
+Release  : 130
 URL      : https://download.qemu.org/qemu-6.1.0.tar.xz
 Source0  : https://download.qemu.org/qemu-6.1.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -21,7 +21,6 @@ Requires: qemu-guest-additions-man = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
 BuildRequires : Sphinx
 BuildRequires : acl-dev
-BuildRequires : apache-ant
 BuildRequires : attr-dev
 BuildRequires : automake-dev
 BuildRequires : bison
