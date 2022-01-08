@@ -1,0 +1,10 @@
+--- qemu-6.0.0/tools/virtiofsd/passthrough_ll.c~	2021-04-29 17:18:59.000000000 +0000
++++ qemu-6.0.0/tools/virtiofsd/passthrough_ll.c	2021-05-19 19:21:10.929611326 +0000
+@@ -54,6 +54,7 @@
+ #include <sys/wait.h>
+ #include <sys/xattr.h>
+ #include <syslog.h>
++#include <linux/stat.h>
+ 
+ #include "qemu/cutils.h"
+ #include "passthrough_helpers.h"

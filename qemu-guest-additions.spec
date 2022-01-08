@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 6.1.0
-Release  : 130
+Release  : 131
 URL      : https://download.qemu.org/qemu-6.1.0.tar.xz
 Source0  : https://download.qemu.org/qemu-6.1.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -19,7 +19,6 @@ Requires: qemu-guest-additions-bin = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-man = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
-BuildRequires : Sphinx
 BuildRequires : acl-dev
 BuildRequires : attr-dev
 BuildRequires : automake-dev
@@ -62,8 +61,11 @@ BuildRequires : pkgconfig(ncursesw)
 BuildRequires : pkgconfig(nettle)
 BuildRequires : pkgconfig(virglrenderer)
 BuildRequires : pkgconfig(vte-2.91)
+BuildRequires : pypi(setuptools)
+BuildRequires : pypi(sphinx_rtd_theme)
+BuildRequires : pypi(wheel)
+BuildRequires : pypi-sphinx
 BuildRequires : snappy-dev
-BuildRequires : sphinx_rtd_theme
 BuildRequires : spice
 BuildRequires : spice-dev
 BuildRequires : spice-protocol
@@ -135,7 +137,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1631060203
+export SOURCE_DATE_EPOCH=1641667436
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
 export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
@@ -168,7 +170,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1631060203
+export SOURCE_DATE_EPOCH=1641667436
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-6.1.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
@@ -236,39 +238,39 @@ cp %{_builddir}/qemu-6.1.0/ui/keycodemapdb/LICENSE.GPL2 %{buildroot}/usr/share/p
 mkdir -p %{buildroot}/usr/lib/systemd/system
 install -m 0644 %{SOURCE1} %{buildroot}/usr/lib/systemd/system/qemu-guest-agent.service
 ## Remove excluded files
-rm -f %{buildroot}/usr/bin/elf2dmp
-rm -f %{buildroot}/usr/bin/ivshmem-client
-rm -f %{buildroot}/usr/bin/ivshmem-server
-rm -f %{buildroot}/usr/bin/qemu-edid
-rm -f %{buildroot}/usr/bin/qemu-i386
-rm -f %{buildroot}/usr/bin/qemu-img
-rm -f %{buildroot}/usr/bin/qemu-io
-rm -f %{buildroot}/usr/bin/qemu-keymap
-rm -f %{buildroot}/usr/bin/qemu-nbd
-rm -f %{buildroot}/usr/bin/qemu-pr-helper
-rm -f %{buildroot}/usr/bin/qemu-storage-daemon
-rm -f %{buildroot}/usr/bin/qemu-system-i386
-rm -f %{buildroot}/usr/bin/qemu-system-x86_64
-rm -f %{buildroot}/usr/bin/qemu-x86_64
-rm -f %{buildroot}/usr/bin/virtfs-proxy-helper
-rm -f %{buildroot}/usr/include/qemu-plugin.h
-rm -f %{buildroot}/usr/libexec/qemu-bridge-helper
-rm -f %{buildroot}/usr/libexec/qemu-pr-helper
-rm -f %{buildroot}/usr/libexec/vhost-user-gpu
-rm -f %{buildroot}/usr/libexec/virtfs-proxy-helper
-rm -f %{buildroot}/usr/libexec/virtiofsd
-rm -f %{buildroot}/usr/share/applications/qemu.desktop
-rm -f %{buildroot}/usr/share/man/man1/qemu-img.1
-rm -f %{buildroot}/usr/share/man/man1/qemu-storage-daemon.1
-rm -f %{buildroot}/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
-rm -f %{buildroot}/usr/share/man/man1/qemu.1
-rm -f %{buildroot}/usr/share/man/man1/virtfs-proxy-helper.1
-rm -f %{buildroot}/usr/share/man/man1/virtiofsd.1
-rm -f %{buildroot}/usr/share/man/man7/qemu-block-drivers.7
-rm -f %{buildroot}/usr/share/man/man7/qemu-cpu-models.7
-rm -f %{buildroot}/usr/share/man/man7/qemu-qmp-ref.7
-rm -f %{buildroot}/usr/share/man/man8/qemu-nbd.8
-rm -f %{buildroot}/usr/share/man/man8/qemu-pr-helper.8
+rm -f %{buildroot}*/usr/bin/elf2dmp
+rm -f %{buildroot}*/usr/bin/ivshmem-client
+rm -f %{buildroot}*/usr/bin/ivshmem-server
+rm -f %{buildroot}*/usr/bin/qemu-edid
+rm -f %{buildroot}*/usr/bin/qemu-i386
+rm -f %{buildroot}*/usr/bin/qemu-img
+rm -f %{buildroot}*/usr/bin/qemu-io
+rm -f %{buildroot}*/usr/bin/qemu-keymap
+rm -f %{buildroot}*/usr/bin/qemu-nbd
+rm -f %{buildroot}*/usr/bin/qemu-pr-helper
+rm -f %{buildroot}*/usr/bin/qemu-storage-daemon
+rm -f %{buildroot}*/usr/bin/qemu-system-i386
+rm -f %{buildroot}*/usr/bin/qemu-system-x86_64
+rm -f %{buildroot}*/usr/bin/qemu-x86_64
+rm -f %{buildroot}*/usr/bin/virtfs-proxy-helper
+rm -f %{buildroot}*/usr/include/qemu-plugin.h
+rm -f %{buildroot}*/usr/libexec/qemu-bridge-helper
+rm -f %{buildroot}*/usr/libexec/qemu-pr-helper
+rm -f %{buildroot}*/usr/libexec/vhost-user-gpu
+rm -f %{buildroot}*/usr/libexec/virtfs-proxy-helper
+rm -f %{buildroot}*/usr/libexec/virtiofsd
+rm -f %{buildroot}*/usr/share/applications/qemu.desktop
+rm -f %{buildroot}*/usr/share/man/man1/qemu-img.1
+rm -f %{buildroot}*/usr/share/man/man1/qemu-storage-daemon.1
+rm -f %{buildroot}*/usr/share/man/man7/qemu-storage-daemon-qmp-ref.7
+rm -f %{buildroot}*/usr/share/man/man1/qemu.1
+rm -f %{buildroot}*/usr/share/man/man1/virtfs-proxy-helper.1
+rm -f %{buildroot}*/usr/share/man/man1/virtiofsd.1
+rm -f %{buildroot}*/usr/share/man/man7/qemu-block-drivers.7
+rm -f %{buildroot}*/usr/share/man/man7/qemu-cpu-models.7
+rm -f %{buildroot}*/usr/share/man/man7/qemu-qmp-ref.7
+rm -f %{buildroot}*/usr/share/man/man8/qemu-nbd.8
+rm -f %{buildroot}*/usr/share/man/man8/qemu-pr-helper.8
 ## install_append content
 rm -rvf %{buildroot}/usr/share/doc
 rm -rvf %{buildroot}/usr/share/icons

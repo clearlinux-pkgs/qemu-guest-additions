@@ -1,7 +1,7 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
 #
-Sphinx
+pypi-sphinx
 attr-dev
 automake-dev
 bison
@@ -22,7 +22,7 @@ m4
 numactl-dev
 python-dev
 snappy-dev
-sphinx_rtd_theme
+pypi(sphinx_rtd_theme)
 spice
 spice-dev
 spice-protocol
