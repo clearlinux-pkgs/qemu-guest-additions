@@ -4,14 +4,22 @@ Date: Thu, 16 Jan 2020 12:59:08 -0800
 Subject: [PATCH] Allow unknown options in configure script.
 
 ---
- configure | 1 -
- 1 file changed, 1 deletion(-)
+ configure | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/configure b/configure
-index 18c26e038..37b8bb021 100755
+index 48c21775f..32353c4ff 100755
 --- a/configure
 +++ b/configure
-@@ -1584,7 +1584,6 @@ for opt do
+@@ -734,7 +734,6 @@ meson_option_parse() {
+   if test $? -eq 1; then
+     echo "ERROR: unknown option $1"
+     echo "Try '$0 --help' for more information"
+-    exit 1
+   fi
+ }
+ 
+@@ -1200,7 +1199,6 @@ for opt do
    *)
        echo "ERROR: unknown option $opt"
        echo "Try '$0 --help' for more information"
