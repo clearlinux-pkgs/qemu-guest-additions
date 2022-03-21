@@ -6,7 +6,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 6.2.0
-Release  : 132
+Release  : 133
 URL      : https://download.qemu.org/qemu-6.2.0.tar.xz
 Source0  : https://download.qemu.org/qemu-6.2.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -26,7 +26,6 @@ BuildRequires : bison
 BuildRequires : buildreq-cmake
 BuildRequires : buildreq-cpan
 BuildRequires : buildreq-distutils3
-BuildRequires : buildreq-golang
 BuildRequires : buildreq-meson
 BuildRequires : buildreq-qmake
 BuildRequires : ceph-dev
@@ -138,7 +137,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1644454401
+export SOURCE_DATE_EPOCH=1647885871
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
 export FCFLAGS="$FFLAGS -fno-lto -fstack-protector-strong -fzero-call-used-regs=used "
@@ -171,7 +170,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1644454401
+export SOURCE_DATE_EPOCH=1647885871
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-6.2.0/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80
