@@ -4,3 +4,5 @@ gtk+-2.0
 slirp
 u2f-emu
 libselinux
+xencontrol
+	canokey-qemu
