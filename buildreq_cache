@@ -1,14 +1,15 @@
-7.1.0
+7.2.0
 acl-dev
 fuse-dev
 libgcrypt-dev
 libssh-dev
 pkgconfig(alsa)
-pkgconfig(canokey-qemu)
+pkgconfig(blkio)
 pkgconfig(fuse3)
 pkgconfig(glusterfs-api)
 pkgconfig(gmp)
 pkgconfig(gnutls)
+pkgconfig(gvnc-1.0)
 pkgconfig(jack)
 pkgconfig(libbpf)
 pkgconfig(libcurl)
@@ -21,7 +22,7 @@ pkgconfig(liburing)
 pkgconfig(libzstd)
 pkgconfig(ncursesw)
 pkgconfig(nettle)
+pkgconfig(sndio)
 pkgconfig(virglrenderer)
 pkgconfig(vte-2.91)
-pkgconfig(xencontrol)
 vte-dev

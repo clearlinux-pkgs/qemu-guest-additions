@@ -5,12 +5,12 @@
 # Source0 file verified with key 0x3353C9CEF108B584 (mdroth@utexas.edu)
 #
 Name     : qemu-guest-additions
-Version  : 7.1.0
-Release  : 136
-URL      : https://download.qemu.org/qemu-7.1.0.tar.xz
-Source0  : https://download.qemu.org/qemu-7.1.0.tar.xz
+Version  : 7.2.0
+Release  : 137
+URL      : https://download.qemu.org/qemu-7.2.0.tar.xz
+Source0  : https://download.qemu.org/qemu-7.2.0.tar.xz
 Source1  : qemu-guest-agent.service
-Source2  : https://download.qemu.org/qemu-7.1.0.tar.xz.sig
+Source2  : https://download.qemu.org/qemu-7.2.0.tar.xz.sig
 Summary  : OpenBIOS development utilities
 Group    : Development/Tools
 License  : Apache-2.0 BSD-2-Clause BSD-2-Clause-Patent BSD-3-Clause BSD-4-Clause CC0-1.0 GPL-2.0 GPL-3.0 LGPL-2.1 LGPL-3.0 MIT OpenSSL
@@ -50,6 +50,7 @@ BuildRequires : pkgconfig(fuse3)
 BuildRequires : pkgconfig(glusterfs-api)
 BuildRequires : pkgconfig(gmp)
 BuildRequires : pkgconfig(gnutls)
+BuildRequires : pkgconfig(gvnc-1.0)
 BuildRequires : pkgconfig(jack)
 BuildRequires : pkgconfig(libbpf)
 BuildRequires : pkgconfig(libcurl)
@@ -141,8 +142,8 @@ services components for the qemu-guest-additions package.
 
 
 %prep
-%setup -q -n qemu-7.1.0
-cd %{_builddir}/qemu-7.1.0
+%setup -q -n qemu-7.2.0
+cd %{_builddir}/qemu-7.2.0
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -152,7 +153,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1664913341
+export SOURCE_DATE_EPOCH=1671131404
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$FFLAGS -fno-lto "
@@ -185,7 +186,7 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1664913341
+export SOURCE_DATE_EPOCH=1671131404
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-%{version}/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80 || :
@@ -242,7 +243,6 @@ cp %{_builddir}/qemu-%{version}/roms/u-boot-sam460ex/board/ACube/bios_emulator/s
 cp %{_builddir}/qemu-%{version}/roms/u-boot-sam460ex/fs/jffs2/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2f02ed32418afe8cc25f30f269c63085bafe44f7 || :
 cp %{_builddir}/qemu-%{version}/roms/u-boot/fs/jffs2/LICENCE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2f02ed32418afe8cc25f30f269c63085bafe44f7 || :
 cp %{_builddir}/qemu-%{version}/roms/vbootrom/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b8b815229aa8a61e483fb4ba0588b8b6c491890 || :
-cp %{_builddir}/qemu-%{version}/slirp/COPYRIGHT %{buildroot}/usr/share/package-licenses/qemu-guest-additions/051935530e6be28baed83b2aafe66ee5b347d656 || :
 cp %{_builddir}/qemu-%{version}/subprojects/libvfio-user/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/36fb901125ffda91bbec1cab3efc5c9f8f2d15a7 || :
 cp %{_builddir}/qemu-%{version}/tests/fp/berkeley-softfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/c4cd5ba6f665cf9ecb44e0620c2c76140566cfc6 || :
 cp %{_builddir}/qemu-%{version}/tests/fp/berkeley-testfloat-3/COPYING.txt %{buildroot}/usr/share/package-licenses/qemu-guest-additions/b91b6ebd4f4725457f64e1d35e5a94c2bd35bcec || :
@@ -311,7 +311,6 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 %defattr(0644,root,root,0755)
 /usr/share/package-licenses/qemu-guest-additions/00dcd169768382e0b6a13d0d110266754fedb62b
 /usr/share/package-licenses/qemu-guest-additions/01a6b4bf79aca9b556822601186afab86e8c4fbf
-/usr/share/package-licenses/qemu-guest-additions/051935530e6be28baed83b2aafe66ee5b347d656
 /usr/share/package-licenses/qemu-guest-additions/06877624ea5c77efe3b7e39b0f909eda6e25a4ec
 /usr/share/package-licenses/qemu-guest-additions/0a0d7ae8e993794ae9c9ac5219c3d2bbf289471f
 /usr/share/package-licenses/qemu-guest-additions/11bb99995c221415712bb5a6d6c0898f02936feb

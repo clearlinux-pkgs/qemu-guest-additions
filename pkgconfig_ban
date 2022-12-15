@@ -5,4 +5,6 @@ slirp
 u2f-emu
 libselinux
 xencontrol
-	canokey-qemu
+canokey-qemu
+blkio
+sndio
