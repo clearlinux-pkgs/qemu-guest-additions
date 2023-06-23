@@ -5,7 +5,7 @@
 --disable-strip
 --target-list='i386-softmmu x86_64-softmmu i386-linux-user x86_64-linux-user'
 --enable-spice
---enable-rbd
+--disable-rbd
 --extra-cflags="-O3"
 --enable-attr
 --enable-cap-ng

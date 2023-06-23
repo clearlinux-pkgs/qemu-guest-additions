@@ -1,11 +1,11 @@
-# This file contains additional build requirements that did not get
-# picked up automatically. One name per line, no whitespace.
+#
+# This file contains extra pkgconfig build requirements that don't get picked up but are 
+# desirable. One name per line, no whitespace.
 #
 pypi-sphinx
 attr-dev
 automake-dev
 bison
-ceph-dev
 flex
 glib-dev
 gtk3-dev
@@ -14,6 +14,7 @@ libcap-dev
 libcap-ng-dev
 libcap-ng-dev
 libjpeg-turbo-dev
+nfs-utils-dev
 libseccomp-dev
 libtool
 libtool-dev
@@ -29,3 +30,9 @@ spice-protocol
 usbredir-dev
 util-linux-dev
 zlib-dev
+liburing-dev
+libssh-dev
+libssh2-dev
+SDL2_image-dev
+libslirp-dev
+ninja
