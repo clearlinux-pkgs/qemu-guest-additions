@@ -9,7 +9,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 8.2.1
-Release  : 139
+Release  : 140
 URL      : https://download.qemu.org/qemu-8.2.1.tar.xz
 Source0  : https://download.qemu.org/qemu-8.2.1.tar.xz
 Source1  : qemu-guest-agent.service
@@ -113,17 +113,6 @@ Requires: qemu-guest-additions-services = %{version}-%{release}
 bin components for the qemu-guest-additions package.
 
 
-%package dev
-Summary: dev components for the qemu-guest-additions package.
-Group: Development
-Requires: qemu-guest-additions-bin = %{version}-%{release}
-Provides: qemu-guest-additions-devel = %{version}-%{release}
-Requires: qemu-guest-additions = %{version}-%{release}
-
-%description dev
-dev components for the qemu-guest-additions package.
-
-
 %package license
 Summary: license components for the qemu-guest-additions package.
 Group: Default
@@ -159,7 +148,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1706574018
+export SOURCE_DATE_EPOCH=1706629801
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -209,7 +198,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1706574018
+export SOURCE_DATE_EPOCH=1706629801
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-%{version}/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80 || :
@@ -302,6 +291,10 @@ rm -f %{buildroot}*/usr/share/man/man7/qemu-cpu-models.7
 rm -f %{buildroot}*/usr/share/man/man7/qemu-qmp-ref.7
 rm -f %{buildroot}*/usr/share/man/man8/qemu-nbd.8
 rm -f %{buildroot}*/usr/share/man/man8/qemu-pr-helper.8
+rm -f %{buildroot}*/usr/include/fdt.h
+rm -f %{buildroot}*/usr/include/libfdt.h
+rm -f %{buildroot}*/usr/include/libfdt_env.h
+rm -f %{buildroot}*/usr/lib64/pkgconfig/libfdt.pc
 ## install_append content
 rm -rvf %{buildroot}/usr/share/doc
 rm -rvf %{buildroot}/usr/share/icons
@@ -321,13 +314,6 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/qemu-ga
-
-%files dev
-%defattr(-,root,root,-)
-/usr/include/fdt.h
-/usr/include/libfdt.h
-/usr/include/libfdt_env.h
-/usr/lib64/pkgconfig/libfdt.pc
 
 %files license
 %defattr(0644,root,root,0755)

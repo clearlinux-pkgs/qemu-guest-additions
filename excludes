@@ -33,3 +33,8 @@
 /usr/share/man/man7/qemu-qmp-ref.7
 /usr/share/man/man8/qemu-nbd.8
 /usr/share/man/man8/qemu-pr-helper.8
+/usr/include/fdt.h
+/usr/include/libfdt.h
+/usr/include/libfdt_env.h
+/usr/lib64/pkgconfig/libfdt.pc
+
