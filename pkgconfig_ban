@@ -8,3 +8,5 @@ xencontrol
 canokey-qemu
 blkio
 sndio
+libxdp
+rutabaga_gfx_ffi
