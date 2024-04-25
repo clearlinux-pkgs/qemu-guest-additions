@@ -1,4 +1,4 @@
-8.2.1
+9.0.0
 fuse-dev
 libgcrypt-dev
 pkgconfig(alsa)
@@ -17,11 +17,9 @@ pkgconfig(libiscsi)
 pkgconfig(libpipewire-0.3)
 pkgconfig(libpmem)
 pkgconfig(libpulse)
-pkgconfig(libxdp)
 pkgconfig(libzstd)
 pkgconfig(ncursesw)
 pkgconfig(nettle)
-pkgconfig(rutabaga_gfx_ffi)
 pkgconfig(sysprof-capture-4)
 pkgconfig(valgrind)
 pkgconfig(virglrenderer)
