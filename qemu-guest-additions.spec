@@ -9,7 +9,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 9.0.0
-Release  : 141
+Release  : 142
 URL      : https://download.qemu.org/qemu-9.0.0.tar.xz
 Source0  : https://download.qemu.org/qemu-9.0.0.tar.xz
 Source1  : qemu-guest-agent.service
@@ -20,7 +20,6 @@ Group    : Development/Tools
 License  : Apache-2.0 Artistic-1.0 Artistic-1.0-Perl BSD-2-Clause BSD-2-Clause-Patent BSD-3-Clause CC0-1.0 GPL-1.0 GPL-2.0 GPL-3.0 HPND LGPL-2.1 LGPL-3.0 MIT
 Requires: qemu-guest-additions-autostart = %{version}-%{release}
 Requires: qemu-guest-additions-bin = %{version}-%{release}
-Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-man = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
@@ -109,20 +108,11 @@ autostart components for the qemu-guest-additions package.
 %package bin
 Summary: bin components for the qemu-guest-additions package.
 Group: Binaries
-Requires: qemu-guest-additions-data = %{version}-%{release}
 Requires: qemu-guest-additions-license = %{version}-%{release}
 Requires: qemu-guest-additions-services = %{version}-%{release}
 
 %description bin
 bin components for the qemu-guest-additions package.
-
-
-%package data
-Summary: data components for the qemu-guest-additions package.
-Group: Data
-
-%description data
-data components for the qemu-guest-additions package.
 
 
 %package license
@@ -159,16 +149,13 @@ grep -E '^\[GNUPG:\] (GOODSIG|EXPKEYSIG) 3353C9CEF108B584' gpg.status
 %setup -q -n qemu-9.0.0
 cd %{_builddir}/qemu-9.0.0
 %patch -P 1 -p1
-pushd ..
-cp -a qemu-9.0.0 buildavx2
-popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1714055818
+export SOURCE_DATE_EPOCH=1714056340
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -200,33 +187,6 @@ export GOAMD64=v2
 --enable-linux-aio
 make  %{?_smp_mflags}
 
-unset PKG_CONFIG_PATH
-pushd ../buildavx2/
-GOAMD64=v3
-CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -march=x86-64-v3 -Wl,-z,x86-64-v3 "
-FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS -march=x86-64-v3 "
-LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS -march=x86-64-v3 "
-%configure --disable-static --disable-sdl \
---enable-vnc \
---enable-gtk \
---enable-kvm \
---disable-strip \
---target-list='i386-softmmu x86_64-softmmu i386-linux-user x86_64-linux-user' \
---enable-spice \
---disable-rbd \
---extra-cflags="-O3" \
---enable-attr \
---enable-cap-ng \
---enable-virtfs \
---enable-vhost-net \
---enable-usb-redir \
---python=/usr/bin/python \
---enable-seccomp \
---enable-linux-aio
-make  %{?_smp_mflags}
-popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -246,7 +206,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1714055818
+export SOURCE_DATE_EPOCH=1714056340
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-%{version}/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80 || :
@@ -303,10 +263,6 @@ cp %{_builddir}/qemu-%{version}/subprojects/libvfio-user/LICENSE %{buildroot}/us
 cp %{_builddir}/qemu-%{version}/tests/lcitool/libvirt-ci/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/4cc77b90af91e615a64ae04893fdffa7939db84c || :
 cp %{_builddir}/qemu-%{version}/tests/uefi-test-tools/LICENSE %{buildroot}/usr/share/package-licenses/qemu-guest-additions/234e74aeab28f7faad2baccf1a3f943b36ab895e || :
 export GOAMD64=v2
-GOAMD64=v3
-pushd ../buildavx2/
-%make_install_v3
-popd
 GOAMD64=v2
 %make_install
 mkdir -p %{buildroot}/usr/lib/systemd/system
@@ -357,7 +313,6 @@ rm -rvf %{buildroot}/usr/share/qemu
 mkdir -pv %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/qemu-guest-agent.service
 ## install_append end
-/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -368,20 +323,7 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 
 %files bin
 %defattr(-,root,root,-)
-/V3/usr/bin/qemu-ga
 /usr/bin/qemu-ga
-
-%files data
-%defattr(-,root,root,-)
-/V3/usr/share/qemu/hppa-firmware.img
-/V3/usr/share/qemu/hppa-firmware64.img
-/V3/usr/share/qemu/openbios-ppc
-/V3/usr/share/qemu/openbios-sparc32
-/V3/usr/share/qemu/openbios-sparc64
-/V3/usr/share/qemu/palcode-clipper
-/V3/usr/share/qemu/s390-ccw.img
-/V3/usr/share/qemu/s390-netboot.img
-/V3/usr/share/qemu/u-boot.e500
 
 %files license
 %defattr(0644,root,root,0755)
