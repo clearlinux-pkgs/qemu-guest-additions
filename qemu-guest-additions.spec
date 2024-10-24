@@ -9,7 +9,7 @@
 #
 Name     : qemu-guest-additions
 Version  : 9.1.1
-Release  : 143
+Release  : 144
 URL      : https://download.qemu.org/qemu-9.1.1.tar.xz
 Source0  : https://download.qemu.org/qemu-9.1.1.tar.xz
 Source1  : qemu-guest-agent.service
@@ -156,7 +156,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1729780844
+export SOURCE_DATE_EPOCH=1729783982
 export GCC_IGNORE_WERROR=1
 CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
 CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -fdebug-types-section -femit-struct-debug-baseonly -fno-lto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
@@ -207,7 +207,7 @@ FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
 FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
 ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
 LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
-export SOURCE_DATE_EPOCH=1729780844
+export SOURCE_DATE_EPOCH=1729783982
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/qemu-guest-additions
 cp %{_builddir}/qemu-%{version}/COPYING %{buildroot}/usr/share/package-licenses/qemu-guest-additions/2b9d60c2972b476384af9900276837ac81954e80 || :
@@ -305,6 +305,7 @@ rm -f %{buildroot}*/usr/include/fdt.h
 rm -f %{buildroot}*/usr/include/libfdt.h
 rm -f %{buildroot}*/usr/include/libfdt_env.h
 rm -f %{buildroot}*/usr/lib64/pkgconfig/libfdt.pc
+rm -f %{buildroot}*/usr/bin/qemu-vmsr-helper
 ## install_append content
 rm -rvf %{buildroot}/usr/share/doc
 rm -rvf %{buildroot}/usr/share/icons
@@ -324,7 +325,6 @@ ln -sv ../qemu-guest-agent.service %{buildroot}/usr/lib/systemd/system/multi-use
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/qemu-ga
-/usr/bin/qemu-vmsr-helper
 
 %files license
 %defattr(0644,root,root,0755)

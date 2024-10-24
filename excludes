@@ -37,4 +37,4 @@
 /usr/include/libfdt.h
 /usr/include/libfdt_env.h
 /usr/lib64/pkgconfig/libfdt.pc
-
+/usr/bin/qemu-vmsr-helper
