@@ -1,4 +1,4 @@
-9.0.0
+9.1.1
 fuse-dev
 libgcrypt-dev
 pkgconfig(alsa)
@@ -20,10 +20,8 @@ pkgconfig(libpulse)
 pkgconfig(libzstd)
 pkgconfig(ncursesw)
 pkgconfig(nettle)
+pkgconfig(qpl)
 pkgconfig(sysprof-capture-4)
-pkgconfig(valgrind)
 pkgconfig(virglrenderer)
 pkgconfig(vte-2.91)
-python3-dev
-valgrind
 vte-dev

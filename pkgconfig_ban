@@ -10,3 +10,5 @@ blkio
 sndio
 libxdp
 rutabaga_gfx_ffi
+libwd
+libwd_comp
