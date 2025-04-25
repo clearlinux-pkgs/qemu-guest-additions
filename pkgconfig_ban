@@ -12,3 +12,5 @@ libxdp
 rutabaga_gfx_ffi
 libwd
 libwd_comp
+pypi(_lzma)
+pkgconfig(qatzip)

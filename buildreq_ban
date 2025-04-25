@@ -9,3 +9,5 @@ curl-dev
 pkgconfig(libnfs)
 pkgconfig(pixman-1)
 python-dev
+pypi(_lzma)
+pkgconfig(qatzip)

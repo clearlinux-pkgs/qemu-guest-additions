@@ -1,4 +1,4 @@
-9.1.1
+10.0.0
 fuse-dev
 libgcrypt-dev
 pkgconfig(alsa)
@@ -10,6 +10,7 @@ pkgconfig(gnutls)
 pkgconfig(gvnc-1.0)
 pkgconfig(jack)
 pkgconfig(libbpf)
+pkgconfig(libcbor)
 pkgconfig(libcurl)
 pkgconfig(libdaxctl)
 pkgconfig(libdw)
@@ -20,7 +21,6 @@ pkgconfig(libpulse)
 pkgconfig(libzstd)
 pkgconfig(ncursesw)
 pkgconfig(nettle)
-pkgconfig(qpl)
 pkgconfig(sysprof-capture-4)
 pkgconfig(virglrenderer)
 pkgconfig(vte-2.91)
